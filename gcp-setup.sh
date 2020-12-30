@@ -62,7 +62,7 @@ then
       exit 1
 fi
 
-echo "All ENV variables seem in order..."
+echo "################### All ENV variables seem in order... #########################################"
 
 curl --request POST \
   --header "Authorization: Bearer $(gcloud auth print-access-token)" \
@@ -98,6 +98,8 @@ gcloud services enable \
 #
 # Just kept changin regions till one worker /shrug
 
+echo "################### Let's Install Some Friends!    #############################################"
+
 curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
 mv ./kustomize ~/.local/bin/kustomize
 
@@ -107,6 +109,7 @@ wget https://github.com/mikefarah/yq/releases/download/2.4.1/yq_linux_amd64 -O $
     
 PATH=$HOME/.local/bin:$PATH
 
+echo "################### Setting Up MGMT cluster, lol .Smh ##########################################"
 MGMT_NAME="mgmt-${PROJECT_ID}"
 # ^^ Should check if 
 #     start with a lowercase letter
@@ -131,6 +134,9 @@ make create-context
 make apply-kcc
 
 kpt cfg set ./instance managed-project "${PROJECT_ID}"
+gcloud beta anthos apply ./instance/managed-project/iam.yaml
+
+echo "################### Install Kubeflow the expensive way #########################################"
 
 MGMTCTXT=$MGMT_NAME
 KF_NAME=$PROJECT_ID
@@ -161,10 +167,11 @@ kpt cfg set ./instance mgmt-ctxt $MGMTCTXT #* ?
 kubectl config use-context "${MGMTCTXT}"
 kubectl create namespace "${KF_PROJECT}"
 
-# this is borken, need to pull a file that has everything set to evn variables not an "edit me" file...
+echo "################### It's the Final Count down... badadada dadadada #############################"
 
+mv $CLONE_DIR/Makefile $KF_DIR/Makefile
 make set-values
 # failed had to request more CPUs to run it
 #failed at random a few times- had to keep kick starting it
-mv $CLONE_DIR/Makefile $KF_DIR/Makefile
+
 make apply
