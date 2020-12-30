@@ -18,7 +18,7 @@ echo "Found \$REGION"
 
 if [ -z "$ZONE" ]
 then
-      echo "Please set \$$ZONE and run again"
+      echo "Please set \$ZONE and run again"
       exit 1
 fi
 
