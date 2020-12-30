@@ -173,8 +173,8 @@ then
         --set values.global.meshID=${MESH_ID} \
         --set values.global.proxy.env.GCP_METADATA="${PROJECT_ID}|${PROJECT_NUMBER}|${CLUSTER_NAME}|${CLUSTER_LOCATION}"
 
-        kpt pkg get https://github.com/kubeflow/gcp-blueprints.git/kubeflow@v1.2.0 "${KF_DIR}"
-        cd "${KF_DIR}"
+      kpt pkg get https://github.com/kubeflow/gcp-blueprints.git/kubeflow@v1.2.0 "${KF_DIR}"
+      cd "${KF_DIR}"
 
       kpt cfg set ./instance mgmt-ctxt $MGMTCTXT #* ?
       kubectl config use-context "${MGMTCTXT}"
@@ -188,4 +188,5 @@ then
       #failed at random a few times- had to keep kick starting it
 fi
 
+cd "${KF_DIR}"
 make apply
