@@ -6,11 +6,15 @@ then
       exit 1
 fi 
 
+echo "Found \$CLONE_DIR"
+
 if [ -z "$REGION" ]
 then
       echo "Please set \$REGION and run again"
       exit 1
 fi
+
+echo "Found \$REGION"
 
 if [ -z "$ZONE" ]
 then
@@ -18,11 +22,15 @@ then
       exit 1
 fi
 
+echo "Found \$ZONE: ${ZONE}"
+
 if [ -z "$EMAIL" ]
 then
       echo "Please set \$EMAIL so I can spam you and run again"
       exit 1
 fi
+
+echo "Found \$EMAIL ${EMAIL} get ready for spam!"
 
 if [ -z "$PROJECT_NUMBER" ]
 then
@@ -41,7 +49,6 @@ then
       echo "Please set \$CLIENT_SECRET and run again"
       exit 1
 fi
-
 
 if [ -z "$PROJECT_ID" ]
 then
