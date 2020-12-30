@@ -38,17 +38,23 @@ then
       exit 1
 if 
 
+echo "PROJECT_NUMBER: ${PROJECT_NUMBER}"
+
 if [ -z "$CLIENT_ID" ]
 then
       echo "Please set \$CLIENT_ID and run again"
       exit 1
 fi
 
+echo "CLIENT_ID"
+
 if [ -z "$CLIENT_SECRET" ]
 then
       echo "Please set \$CLIENT_SECRET and run again"
       exit 1
 fi
+
+echo "CLIENT_SECRET"
 
 if [ -z "$PROJECT_ID" ]
 then
