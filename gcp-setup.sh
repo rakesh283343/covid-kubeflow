@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ -z "$CLONE_DIR" ]
+      echo "Please set \$CLONE_DIR and run again \n (Hint: it's probably this directory)"
+      exit 1
+fi 
+
 if [ -z "$REGION" ]
       echo "Please set \$REGION and run again"
       exit 1
@@ -134,5 +139,9 @@ kubectl config use-context "${MGMTCTXT}"
 kubectl create namespace "${KF_PROJECT}"
 
 # this is borken, need to pull a file that has everything set to evn variables not an "edit me" file...
+
 make set-values
+# failed had to request more CPUs to run it
+#failed at random a few times- had to keep kick starting it
+mv $CLONE_DIR/Makefile $KF_DIR/Makefile
 make apply
