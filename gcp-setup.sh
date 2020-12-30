@@ -6,17 +6,25 @@ then
       exit 1
 fi 
 
+echo "Found \$CLONE_DIR"
+
 if [ -z "$REGION" ]
 then
-      echo "Please set \$REGION and run again"
+      #us-east1
+      echo "Please set \$REGION and run again (e.g. us-east1)"
       exit 1
 fi
 
+echo "Found \$REGION"
+
 if [ -z "$ZONE" ]
 then
-      echo "Please set \$$ZONE and run again"
+      #us-east1-b
+      echo "Please set \$ZONE and run again (e.g. us-east1-b)"
       exit 1
 fi
+
+echo "\$ZONE: ${ZONE}"
 
 if [ -z "$EMAIL" ]
 then
@@ -24,11 +32,15 @@ then
       exit 1
 fi
 
+echo "Found \$EMAIL ${EMAIL} get ready for spam!"
+
 if [ -z "$PROJECT_NUMBER" ]
 then
       echo "Please set \$PROJECT_NUMBER and run again"
       exit 1
-if 
+fi
+
+echo "PROJECT_NUMBER: ${PROJECT_NUMBER}"
 
 if [ -z "$CLIENT_ID" ]
 then
@@ -36,12 +48,15 @@ then
       exit 1
 fi
 
+echo "CLIENT_ID"
+
 if [ -z "$CLIENT_SECRET" ]
 then
       echo "Please set \$CLIENT_SECRET and run again"
       exit 1
 fi
 
+echo "CLIENT_SECRET"
 
 if [ -z "$PROJECT_ID" ]
 then
@@ -49,7 +64,7 @@ then
       exit 1
 fi
 
-echo "All ENV variables seem in order..."
+echo "################### All ENV variables seem in order... #########################################"
 
 curl --request POST \
   --header "Authorization: Bearer $(gcloud auth print-access-token)" \
@@ -85,6 +100,8 @@ gcloud services enable \
 #
 # Just kept changin regions till one worker /shrug
 
+echo "################### Let's Install Some Friends!    #############################################"
+
 curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
 mv ./kustomize ~/.local/bin/kustomize
 
@@ -94,6 +111,7 @@ wget https://github.com/mikefarah/yq/releases/download/2.4.1/yq_linux_amd64 -O $
     
 PATH=$HOME/.local/bin:$PATH
 
+echo "################### Setting Up MGMT cluster, lol .Smh ##########################################"
 MGMT_NAME="mgmt-${PROJECT_ID}"
 # ^^ Should check if 
 #     start with a lowercase letter
@@ -118,6 +136,9 @@ make create-context
 make apply-kcc
 
 kpt cfg set ./instance managed-project "${PROJECT_ID}"
+gcloud beta anthos apply ./instance/managed-project/iam.yaml
+
+echo "################### Install Kubeflow the expensive way #########################################"
 
 MGMTCTXT=$MGMT_NAME
 KF_NAME=$PROJECT_ID
@@ -148,10 +169,11 @@ kpt cfg set ./instance mgmt-ctxt $MGMTCTXT #* ?
 kubectl config use-context "${MGMTCTXT}"
 kubectl create namespace "${KF_PROJECT}"
 
-# this is borken, need to pull a file that has everything set to evn variables not an "edit me" file...
+echo "################### It's the Final Count down... badadada dadadada #############################"
 
+mv $CLONE_DIR/Makefile $KF_DIR/Makefile
 make set-values
 # failed had to request more CPUs to run it
 #failed at random a few times- had to keep kick starting it
-mv $CLONE_DIR/Makefile $KF_DIR/Makefile
+
 make apply
