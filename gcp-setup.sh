@@ -49,6 +49,8 @@ then
       exit 1
 fi
 
+echo "All ENV variables seem in order..."
+
 curl --request POST \
   --header "Authorization: Bearer $(gcloud auth print-access-token)" \
   --data '' \
