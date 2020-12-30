@@ -4,6 +4,7 @@
 if [ -z "$PROJECT_ID" ]
 then
       echo "Please set \$PROJECT_ID and run again"
+      exit 1
 else
       curl --request POST \
         --header "Authorization: Bearer $(gcloud auth print-access-token)" \
