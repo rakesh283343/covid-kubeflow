@@ -36,7 +36,7 @@ if [ -z "$PROJECT_NUMBER" ]
 then
       echo "Please set \$PROJECT_NUMBER and run again"
       exit 1
-if 
+fi
 
 echo "PROJECT_NUMBER: ${PROJECT_NUMBER}"
 
