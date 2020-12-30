@@ -1,36 +1,43 @@
 #!/bin/bash
 
 if [ -z "$CLONE_DIR" ]
+then
       echo "Please set \$CLONE_DIR and run again \n (Hint: it's probably this directory)"
       exit 1
 fi 
 
 if [ -z "$REGION" ]
+then
       echo "Please set \$REGION and run again"
       exit 1
 fi
 
 if [ -z "$ZONE" ]
+then
       echo "Please set \$$ZONE and run again"
       exit 1
 fi
 
 if [ -z "$EMAIL" ]
+then
       echo "Please set \$EMAIL so I can spam you and run again"
       exit 1
 fi
 
 if [ -z "$PROJECT_NUMBER" ]
+then
       echo "Please set \$PROJECT_NUMBER and run again"
       exit 1
 if 
 
 if [ -z "$CLIENT_ID" ]
+then
       echo "Please set \$CLIENT_ID and run again"
       exit 1
 fi
 
 if [ -z "$CLIENT_SECRET" ]
+then
       echo "Please set \$CLIENT_SECRET and run again"
       exit 1
 fi
@@ -41,12 +48,13 @@ then
       echo "Please set \$PROJECT_ID and run again"
       exit 1
 fi
-      curl --request POST \
-        --header "Authorization: Bearer $(gcloud auth print-access-token)" \
-        --data '' \
-        https://meshconfig.googleapis.com/v1alpha1/projects/${PROJECT_ID}:initialize
-        MGMT_PROJECT=${PROJECT_ID}
-fi
+
+curl --request POST \
+  --header "Authorization: Bearer $(gcloud auth print-access-token)" \
+  --data '' \
+  https://meshconfig.googleapis.com/v1alpha1/projects/${PROJECT_ID}:initialize
+  MGMT_PROJECT=${PROJECT_ID}
+
 
 gcloud config set project $PROJECT_ID
 
