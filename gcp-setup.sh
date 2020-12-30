@@ -10,6 +10,7 @@ echo "Found \$CLONE_DIR"
 
 if [ -z "$REGION" ]
 then
+      #us-east1
       echo "Please set \$REGION and run again"
       exit 1
 fi
@@ -18,11 +19,11 @@ echo "Found \$REGION"
 
 if [ -z "$ZONE" ]
 then
+      #us-east1-b
       echo "Please set \$ZONE and run again"
-      exit 1
 fi
 
-echo "Found \$ZONE: ${ZONE}"
+echo "\$ZONE: ${ZONE}"
 
 if [ -z "$EMAIL" ]
 then
