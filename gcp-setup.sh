@@ -5,7 +5,31 @@ if [ -z "$REGION" ]
       exit 1
 fi
 
+if [ -z "$ZONE" ]
+      echo "Please set \$$ZONE and run again"
+      exit 1
+fi
+
+if [ -z "$EMAIL" ]
+      echo "Please set \$EMAIL so I can spam you and run again"
+      exit 1
+fi
+
+if [ -z "$PROJECT_NUMBER" ]
+      echo "Please set \$PROJECT_NUMBER and run again"
+      exit 1
 if 
+
+if [ -z "$CLIENT_ID" ]
+      echo "Please set \$CLIENT_ID and run again"
+      exit 1
+fi
+
+if [ -z "$CLIENT_SECRET" ]
+      echo "Please set \$CLIENT_SECRET and run again"
+      exit 1
+fi
+
 
 if [ -z "$PROJECT_ID" ]
 then
@@ -80,4 +104,35 @@ make apply-kcc
 
 kpt cfg set ./instance managed-project "${PROJECT_ID}"
 
+MGMTCTXT=$MGMT_NAME
+KF_NAME=$PROJECT_ID
+KF_PROJECT=$PROJECT_ID #Careful here...
+KF_DIR=${HOME}/kf-deployments/${KF_NAME}
 
+cd $HOME
+curl -LO https://storage.googleapis.com/gke-release/asm/istio-1.4.10-asm.18-linux.tar.gz
+tar xzf istio-1.4.10-asm.18-linux.tar.gz
+mv istio-1.4.10-asm.18/bin/* $HOME/.local/bin
+
+WORKLOAD_POOL=${PROJECT_ID}.svc.id.goog
+CLUSTER_LOCATION=$REGION
+CLUSTER_NAME=$KF_NAME
+MESH_ID="proj-${PROJECT_NUMBER}"
+## Permisive - for strict TLS see https://cloud.google.com/service-mesh/docs/archive/1.4/docs/gke-install-new-cluster#preparing_to_install_anthos_service_mesh
+istioctl manifest apply --set profile=asm \
+  --set values.global.trustDomain=${WORKLOAD_POOL} \
+  --set values.global.sds.token.aud=${WORKLOAD_POOL} \
+  --set values.nodeagent.env.GKE_CLUSTER_URL=https://container.googleapis.com/v1/projects/${PROJECT_ID}/locations/${CLUSTER_LOCATION}/clusters/${CLUSTER_NAME} \
+  --set values.global.meshID=${MESH_ID} \
+  --set values.global.proxy.env.GCP_METADATA="${PROJECT_ID}|${PROJECT_NUMBER}|${CLUSTER_NAME}|${CLUSTER_LOCATION}"
+  
+  kpt pkg get https://github.com/kubeflow/gcp-blueprints.git/kubeflow@v1.2.0 "${KF_DIR}"
+  cd "${KF_DIR}"
+
+kpt cfg set ./instance mgmt-ctxt $MGMTCTXT #* ?
+kubectl config use-context "${MGMTCTXT}"
+kubectl create namespace "${KF_PROJECT}"
+
+# this is borken, need to pull a file that has everything set to evn variables not an "edit me" file...
+make set-values
+make apply
