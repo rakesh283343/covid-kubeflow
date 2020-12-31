@@ -1,6 +1,6 @@
 # The name of the context for the management cluster
 # These are read using yq from the Kptfile.
-MGMTCTXT=$(shell yq r ./instance/Kptfile 'openAPI.definitions."io.k8s.cli.setters.mgmt-ctxt".x-k8s-cli.setter.value')
+#MGMTCTXT=$(shell yq r ./instance/Kptfile 'openAPI.definitions."io.k8s.cli.setters.mgmt-ctxt".x-k8s-cli.setter.value')
 
 # The name of the context for your Kubeflow cluster
 NAME=$(shell yq r ./instance/Kptfile 'openAPI.definitions."io.k8s.cli.setters.name".x-k8s-cli.setter.value')
