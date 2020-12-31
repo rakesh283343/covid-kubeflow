@@ -11,7 +11,7 @@ echo "Found \$CLONE_DIR"
 if [ -z "$REGION" ]
 then
       #us-east1
-      echo "Please set \$REGION and run again (e.g. us-east1)"
+      echo "Please set \$REGION and run again"
       exit 1
 fi
 
@@ -20,8 +20,7 @@ echo "Found \$REGION"
 if [ -z "$ZONE" ]
 then
       #us-east1-b
-      echo "Please set \$ZONE and run again (e.g. us-east1-b)"
-      exit 1
+      echo "Please set \$ZONE and run again"
 fi
 
 echo "\$ZONE: ${ZONE}"
@@ -64,13 +63,36 @@ then
       exit 1
 fi
 
+
+CLUSTER_LOCATION=$REGION
+CLUSTER_NAME=$PROJECT_ID
+KF_NAME=$PROJECT_ID
+KF_PROJECT=$PROJECT_ID #Careful here...
+KF_DIR=${HOME}/kf-deployments/${KF_NAME}
+LOCATION=${REGION}
+MESH_ID="proj-${PROJECT_NUMBER}"
+
+MGMT_NAME="mgmt-${PROJECT_ID}"
+      # ^^ Should check if 
+      #     start with a lowercase letter
+      #     only contain lowercase letters, numbers and -
+      #     end with a number or a letter
+      #     contain no more than 18 characters
+MGMT_DIR=${HOME}/kf-deployments/${MGMT_NAME}
+MGMT_PROJECT=${PROJECT_ID}
+MGMTCTXT=$MGMT_NAME
+WORKLOAD_POOL=${PROJECT_ID}.svc.id.goog
+
+
+ 
+      
 echo "################### All ENV variables seem in order... #########################################"
 
 curl --request POST \
   --header "Authorization: Bearer $(gcloud auth print-access-token)" \
   --data '' \
   https://meshconfig.googleapis.com/v1alpha1/projects/${PROJECT_ID}:initialize
-  MGMT_PROJECT=${PROJECT_ID}
+
 
 
 gcloud config set project $PROJECT_ID
@@ -83,9 +105,9 @@ gcloud services enable \
   cloudresourcemanager.googleapis.com \
   ml.googleapis.com \
   meshconfig.googleapis.com
-  
-  
-# IF above errors with `Identity Pool does not exist ...` try :  
+
+
+# IF above errors with `Identity Pool does not exist ...` try :
 # per: https://github.com/kubeflow/website/issues/2121
 # gcloud beta container clusters create tmp-cluster \
 #   --release-channel regular \
@@ -94,9 +116,9 @@ gcloud services enable \
 #
 # gcloud beta container clusters delete tmp-cluster --region=${REGION}
 #
-# Had lots of 
-# > Insufficient regional quota to satisfy request: resource # > "IN_USE_ADDRESSES": request requires '9.0' and is short '1.0'. project has a quota of 
-# > '8.0' with '8.0' available. View and manage quotas at https://console.cloud.google.com/iam-admin/quotas?usage=USED&project=covid-kf.` 
+# Had lots of
+# > Insufficient regional quota to satisfy request: resource # > "IN_USE_ADDRESSES": request requires '9.0' and is short '1.0'. project has a quota of
+# > '8.0' with '8.0' available. View and manage quotas at https://console.cloud.google.com/iam-admin/quotas?usage=USED&project=covid-kf.`
 #
 # Just kept changin regions till one worker /shrug
 
@@ -108,19 +130,11 @@ mv ./kustomize ~/.local/bin/kustomize
 ## Warno: Max v is 2.4.1
 wget https://github.com/mikefarah/yq/releases/download/2.4.1/yq_linux_amd64 -O $HOME/.local/bin/yq &&\
     chmod +x $HOME/.local/bin/yq
-    
+
 PATH=$HOME/.local/bin:$PATH
 
 echo "################### Setting Up MGMT cluster, lol .Smh ##########################################"
-MGMT_NAME="mgmt-${PROJECT_ID}"
-# ^^ Should check if 
-#     start with a lowercase letter
-#     only contain lowercase letters, numbers and -
-#     end with a number or a letter
-#     contain no more than 18 characters
 
-LOCATION=${REGION}
-MGMT_DIR=${HOME}/kf-deployments/${MGMT_NAME}
 mkdir -p $MGMT_DIR
 
 
@@ -140,20 +154,14 @@ gcloud beta anthos apply ./instance/managed-project/iam.yaml
 
 echo "################### Install Kubeflow the expensive way #########################################"
 
-MGMTCTXT=$MGMT_NAME
-KF_NAME=$PROJECT_ID
-KF_PROJECT=$PROJECT_ID #Careful here...
-KF_DIR=${HOME}/kf-deployments/${KF_NAME}
+
 
 cd $HOME
 curl -LO https://storage.googleapis.com/gke-release/asm/istio-1.4.10-asm.18-linux.tar.gz
 tar xzf istio-1.4.10-asm.18-linux.tar.gz
 mv istio-1.4.10-asm.18/bin/* $HOME/.local/bin
 
-WORKLOAD_POOL=${PROJECT_ID}.svc.id.goog
-CLUSTER_LOCATION=$REGION
-CLUSTER_NAME=$KF_NAME
-MESH_ID="proj-${PROJECT_NUMBER}"
+
 ## Permisive - for strict TLS see https://cloud.google.com/service-mesh/docs/archive/1.4/docs/gke-install-new-cluster#preparing_to_install_anthos_service_mesh
 istioctl manifest apply --set profile=asm \
   --set values.global.trustDomain=${WORKLOAD_POOL} \
@@ -161,9 +169,9 @@ istioctl manifest apply --set profile=asm \
   --set values.nodeagent.env.GKE_CLUSTER_URL=https://container.googleapis.com/v1/projects/${PROJECT_ID}/locations/${CLUSTER_LOCATION}/clusters/${CLUSTER_NAME} \
   --set values.global.meshID=${MESH_ID} \
   --set values.global.proxy.env.GCP_METADATA="${PROJECT_ID}|${PROJECT_NUMBER}|${CLUSTER_NAME}|${CLUSTER_LOCATION}"
-  
-  kpt pkg get https://github.com/kubeflow/gcp-blueprints.git/kubeflow@v1.2.0 "${KF_DIR}"
-  cd "${KF_DIR}"
+
+kpt pkg get https://github.com/kubeflow/gcp-blueprints.git/kubeflow@v1.2.0 "${KF_DIR}"
+cd "${KF_DIR}"
 
 kpt cfg set ./instance mgmt-ctxt $MGMTCTXT #* ?
 kubectl config use-context "${MGMTCTXT}"
@@ -175,5 +183,4 @@ mv $CLONE_DIR/Makefile $KF_DIR/Makefile
 make set-values
 # failed had to request more CPUs to run it
 #failed at random a few times- had to keep kick starting it
-
 make apply
