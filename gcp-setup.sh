@@ -80,7 +80,7 @@ export MGMT_NAME="mgmt-${PROJECT_ID}"
       #     contain no more than 18 characters
 export MGMT_DIR=${HOME}/kf-deployments/${MGMT_NAME}
 export MGMT_PROJECT=${PROJECT_ID}
-MGMTCTXT=$MGMT_NAME
+export MGMTCTXT=$MGMT_NAME
 export WORKLOAD_POOL=${PROJECT_ID}.svc.id.goog
 
 
