@@ -63,7 +63,7 @@ then
       exit 1
 fi
 
-<<<<<<< HEAD
+
 
 export CLUSTER_LOCATION=$REGION
 export CLUSTER_NAME=$PROJECT_ID
