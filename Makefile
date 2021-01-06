@@ -1,6 +1,6 @@
 # The name of the context for the management cluster
 # These are read using yq from the Kptfile.
-MGMTCTXT=$(shell yq r ./instance/Kptfile 'openAPI.definitions."io.k8s.cli.setters.mgmt-ctxt".x-k8s-cli.setter.value')
+#MGMTCTXT=$(shell yq r ./instance/Kptfile 'openAPI.definitions."io.k8s.cli.setters.mgmt-ctxt".x-k8s-cli.setter.value')
 
 # The name of the context for your Kubeflow cluster
 NAME=$(shell yq r ./instance/Kptfile 'openAPI.definitions."io.k8s.cli.setters.name".x-k8s-cli.setter.value')
@@ -340,8 +340,7 @@ wait-gcp:
 	for resource in $(GCP_RESOURCE_TYPES_TO_CHECK); \
 	do \
 		echo "Waiting for $$resource resources..."; \
-		kubectl --context=$(MGMTCTXT) wait --for=condition=Ready --timeout=600s "$${resource}" -l kf-name=$(NAME)  \
-		-n $(KF_PROJECT)
+		kubectl --context=$(MGMTCTXT) wait --for=condition=Ready --timeout=600s "$${resource}" -l kf-name=$(NAME) -n $(PROJECT_ID)  \
 		|| (echo "Error: waiting for $${resource} ready timed out."; \
 			echo "To troubleshoot, you can run:"; \
 			echo "kubectl --context=$(MGMTCTXT) describe $${resource} -l kf-name=$(NAME)"; \

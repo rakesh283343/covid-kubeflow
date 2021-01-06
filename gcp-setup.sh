@@ -65,24 +65,24 @@ fi
 
 <<<<<<< HEAD
 
-CLUSTER_LOCATION=$REGION
-CLUSTER_NAME=$PROJECT_ID
-KF_NAME=$PROJECT_ID
-KF_PROJECT=$PROJECT_ID #Careful here...
-KF_DIR=${HOME}/kf-deployments/${KF_NAME}
-LOCATION=${REGION}
-MESH_ID="proj-${PROJECT_NUMBER}"
+export CLUSTER_LOCATION=$REGION
+export CLUSTER_NAME=$PROJECT_ID
+export KF_NAME=$PROJECT_ID
+export KF_PROJECT=$PROJECT_ID #Careful here...
+export KF_DIR=${HOME}/kf-deployments/${KF_NAME}
+export LOCATION=${REGION}
+export MESH_ID="proj-${PROJECT_NUMBER}"
 
-MGMT_NAME="mgmt-${PROJECT_ID}"
+export MGMT_NAME="mgmt-${PROJECT_ID}"
       # ^^ Should check if 
       #     start with a lowercase letter
       #     only contain lowercase letters, numbers and -
       #     end with a number or a letter
       #     contain no more than 18 characters
-MGMT_DIR=${HOME}/kf-deployments/${MGMT_NAME}
-MGMT_PROJECT=${PROJECT_ID}
-MGMTCTXT=$MGMT_NAME
-WORKLOAD_POOL=${PROJECT_ID}.svc.id.goog
+export MGMT_DIR=${HOME}/kf-deployments/${MGMT_NAME}
+export MGMT_PROJECT=${PROJECT_ID}
+export MGMTCTXT=$MGMT_NAME
+export WORKLOAD_POOL=${PROJECT_ID}.svc.id.goog
 
 
  
