@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 if [ -z "$CLONE_DIR" ]
 then
@@ -184,7 +185,7 @@ cp $CLONE_DIR/Makefile $KF_DIR/Makefile
 make set-values
 # failed had to request more CPUs to run it
 #failed at random a few times- had to keep kick starting it
-=======
+
 
 CLUSTER_LOCATION=$REGION
 CLUSTER_NAME=$PROJECT_ID
