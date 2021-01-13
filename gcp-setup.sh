@@ -137,7 +137,10 @@ PATH=$HOME/.local/bin:$PATH
 
 echo "################### Setting Up MGMT cluster, lol .Smh ##########################################"
 
-mkdir -p $MGMT_DIR
+if [ ! -d $MGMT_DIR ]
+then
+  mkdir -p $MGMT_DIR
+fi
 
 
 kpt pkg get https://github.com/kubeflow/gcp-blueprints.git/management@v1.2.0 "${MGMT_DIR}"
