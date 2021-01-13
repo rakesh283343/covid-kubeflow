@@ -60,9 +60,9 @@ set-values:
 	kpt cfg set ./upstream/manifests/gcp gcloud.core.project ${PROJECT_ID}
 	kpt cfg set ./upstream/manifests/gcp gcloud.compute.zone ${ZONE}
 	kpt cfg set ./upstream/manifests/gcp location ${REGION}
-	kpt cfg set ./upstream/manifests/gcp log-firewalls false
+    kpt cfg set ./upstream/manifests/gcp log-firewalls false
 
-	kpt cfg set ./upstream/manifests/stacks/gcp name ${KF_NAME}
+    kpt cfg set ./upstream/manifests/stacks/gcp name ${KF_NAME}
     kpt cfg set ./upstream/manifests/stacks/gcp gcloud.core.project ${PROJECT_ID}
 
     kpt cfg set ./instance name ${KF_NAME}
