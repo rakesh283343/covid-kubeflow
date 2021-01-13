@@ -339,7 +339,7 @@ wait-gcp:
 	for resource in $(GCP_RESOURCE_TYPES_TO_CHECK); \
 	do \
 		echo "Waiting for $$resource resources..."; \
-		kubectl --context=$(MGMTCTXT) wait --for=condition=Ready --timeout=600s "$${resource}" -l kf-name=$(NAME)  \
+		kubectl --context=$(MGMTCTXT) wait --for=condition=Ready --timeout=600s "$${resource}" -l kf-name=$(NAME) -n ${KF_NAME} \
 		|| (echo "Error: waiting for $${resource} ready timed out."; \
 			echo "To troubleshoot, you can run:"; \
 			echo "kubectl --context=$(MGMTCTXT) describe $${resource} -l kf-name=$(NAME)"; \
