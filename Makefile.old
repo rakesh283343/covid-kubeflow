@@ -1,6 +1,6 @@
 # The name of the context for the management cluster
 # These are read using yq from the Kptfile.
-MGMTCTXT=$(shell yq r ./instance/Kptfile 'openAPI.definitions."io.k8s.cli.setters.mgmt-ctxt".x-k8s-cli.setter.value')
+#MGMTCTXT=$(shell yq r ./instance/Kptfile 'openAPI.definitions."io.k8s.cli.setters.mgmt-ctxt".x-k8s-cli.setter.value')
 
 # The name of the context for your Kubeflow cluster
 NAME=$(shell yq r ./instance/Kptfile 'openAPI.definitions."io.k8s.cli.setters.name".x-k8s-cli.setter.value')
@@ -55,7 +55,6 @@ set-values:
 	kpt cfg set ./instance gke.private false
 
 	kpt cfg set ./instance mgmt-ctxt ${MGMT_NAME}
-
 	kpt cfg set ./upstream/manifests/gcp name ${KF_NAME}
 	kpt cfg set ./upstream/manifests/gcp gcloud.core.project ${PROJECT_ID}
 	kpt cfg set ./upstream/manifests/gcp gcloud.compute.zone ${ZONE}
@@ -63,12 +62,12 @@ set-values:
 	kpt cfg set ./upstream/manifests/gcp log-firewalls false
 
 	kpt cfg set ./upstream/manifests/stacks/gcp name ${KF_NAME}
-    kpt cfg set ./upstream/manifests/stacks/gcp gcloud.core.project ${PROJECT_ID}
+	kpt cfg set ./upstream/manifests/stacks/gcp gcloud.core.project ${PROJECT_ID}
 
-    kpt cfg set ./instance name ${KF_NAME}
-    kpt cfg set ./instance location ${REGION}
-    kpt cfg set ./instance gcloud.core.project ${PROJECT_ID}
-    kpt cfg set ./instance email ${EMAIL}
+	kpt cfg set ./instance name ${KF_NAME}
+	kpt cfg set ./instance location ${REGION}
+	kpt cfg set ./instance gcloud.core.project ${PROJECT_ID}
+	kpt cfg set ./instance email ${EMAIL}
 
 #************************************************************************************************************************
 #
@@ -341,7 +340,7 @@ wait-gcp:
 	for resource in $(GCP_RESOURCE_TYPES_TO_CHECK); \
 	do \
 		echo "Waiting for $$resource resources..."; \
-		kubectl --context=$(MGMTCTXT) wait --for=condition=Ready --timeout=600s "$${resource}" -l kf-name=$(NAME)  \
+		kubectl --context=$(MGMTCTXT) wait --for=condition=Ready --timeout=600s "$${resource}" -l kf-name=$(NAME) -n $(PROJECT_ID)  \
 		|| (echo "Error: waiting for $${resource} ready timed out."; \
 			echo "To troubleshoot, you can run:"; \
 			echo "kubectl --context=$(MGMTCTXT) describe $${resource} -l kf-name=$(NAME)"; \
