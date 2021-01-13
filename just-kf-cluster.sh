@@ -63,6 +63,7 @@ mv $KF_DIR/Makefile $KF_DIR/Makefile.bu
 cp $CLONE_DIR/Makefile $KF_DIR/Makefile
 
 echo "Setting values with make set-values"
+make get-pkg
 make set-values
 # failed had to request more CPUs to run it
 #failed at random a few times- had to keep kick starting it
