@@ -185,15 +185,15 @@ kubectl create namespace "${KF_PROJECT}"
 
 echo "################### It's the Final Count down... badadada dadadada #############################"
 
-
-echo "################### It's the Final Count down... badadada dadadada #############################"
-
+echo "Copying custom Makefile"
 cp $CLONE_DIR/Makefile $KF_DIR/Makefile
+
+echo "Setting values with make set-values"
 make set-values
 # failed had to request more CPUs to run it
 #failed at random a few times- had to keep kick starting it
 
-
+echo "Getting ready to do a make apply"
 cd "${KF_DIR}"
 make apply
 
