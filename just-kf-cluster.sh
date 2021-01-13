@@ -59,6 +59,7 @@ echo "################### It's the Final Count down... badadada dadadada #######
 
 
 echo "Copying custom Makefile"
+mv $KF_DIR/Makefile $KF_DIR/Makefile.bu
 cp $CLONE_DIR/Makefile $KF_DIR/Makefile
 
 echo "Setting values with make set-values"
