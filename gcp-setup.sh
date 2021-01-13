@@ -159,12 +159,14 @@ gcloud beta anthos apply ./instance/managed-project/iam.yaml
 echo "################### Install Kubeflow the expensive way #########################################"
 set -e
 
+echo "Install istio-custom"
 cd $HOME
 curl -LO https://storage.googleapis.com/gke-release/asm/istio-1.4.10-asm.18-linux.tar.gz
 tar xzf istio-1.4.10-asm.18-linux.tar.gz
 mv istio-1.4.10-asm.18/bin/* $HOME/.local/bin
 
 
+echo "apply manifest..."
 ## Permisive - for strict TLS see https://cloud.google.com/service-mesh/docs/archive/1.4/docs/gke-install-new-cluster#preparing_to_install_anthos_service_mesh
 istioctl manifest apply --set profile=asm \
   --set values.global.trustDomain=${WORKLOAD_POOL} \
@@ -173,6 +175,7 @@ istioctl manifest apply --set profile=asm \
   --set values.global.meshID=${MESH_ID} \
   --set values.global.proxy.env.GCP_METADATA="${PROJECT_ID}|${PROJECT_NUMBER}|${CLUSTER_NAME}|${CLUSTER_LOCATION}"
 
+rm -rf ${KF_DIR}
 kpt pkg get https://github.com/kubeflow/gcp-blueprints.git/kubeflow@v1.2.0 "${KF_DIR}"
 cd "${KF_DIR}"
 
