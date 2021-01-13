@@ -139,6 +139,7 @@ echo "################### Setting Up MGMT cluster, lol .Smh ####################
 
 if [ ! -d $MGMT_DIR ]
 then
+  echo "Creating ${MGMT_DIR}"
   mkdir -p $MGMT_DIR
 fi
 
