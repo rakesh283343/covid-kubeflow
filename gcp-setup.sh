@@ -180,7 +180,7 @@ kubectl create namespace "${KF_PROJECT}"
 
 echo "################### It's the Final Count down... badadada dadadada #############################"
 
-mv $CLONE_DIR/Makefile $KF_DIR/Makefile
+cp $CLONE_DIR/Makefile $KF_DIR/Makefile
 make set-values
 # failed had to request more CPUs to run it
 #failed at random a few times- had to keep kick starting it
@@ -307,3 +307,24 @@ make set-values
 
 cd "${KF_DIR}"
 make apply
+
+# things known to cause issues which require you simply to rerun `make apply`
+# ... no matches for kind "Image" in version "caching.internal.knative.dev/v1alpha1"
+# ... no matches for kind "Profile" in version "kubeflow.org/v1beta1"
+
+echo "Then this"
+gcloud container clusters get-credentials "${KF_NAME}" --zone "${REGION}" --project "${KF_PROJECT}"
+
+echo "Generating login for ${EMAIL}"
+gcloud projects add-iam-policy-binding "${KF_PROJECT}" --member=user:${EMAIL} --role=roles/iap.httpsResourceAccessor
+
+echo "Cash me here"
+kubectl -n istio-system get ingress
+
+## turn on autoscaling on both clusters
+
+#gcloud container clusters update covid-kf --enable-autoscaling \
+#    --min-nodes 0 --max-nodes 10 --zone $ZONE --node-pool default-pool
+#
+#gcloud container clusters update mgmt-covid-kf --enable-autoscaling \
+#    --min-nodes 1 --max-nodes 2 --zone $ZONE --node-pool mgmt-covid-kf-pool
