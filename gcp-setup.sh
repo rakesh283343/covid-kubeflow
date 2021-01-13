@@ -299,7 +299,7 @@ kubectl create namespace "${KF_PROJECT}"
 
 echo "################### It's the Final Count down... badadada dadadada #############################"
 
-mv $CLONE_DIR/Makefile $KF_DIR/Makefile
+cp $CLONE_DIR/Makefile $KF_DIR/Makefile
 make set-values
 # failed had to request more CPUs to run it
 #failed at random a few times- had to keep kick starting it
