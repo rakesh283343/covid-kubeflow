@@ -1,5 +1,4 @@
 #!/bin/bash
-set -e
 
 if [ -z "$CLONE_DIR" ]
 then
@@ -143,7 +142,6 @@ then
   mkdir -p $MGMT_DIR
 fi
 
-
 kpt pkg get https://github.com/kubeflow/gcp-blueprints.git/management@v1.2.0 "${MGMT_DIR}"
 cd "${MGMT_DIR}/management"
 make get-pkg
@@ -159,8 +157,7 @@ kpt cfg set ./instance managed-project "${PROJECT_ID}"
 gcloud beta anthos apply ./instance/managed-project/iam.yaml
 
 echo "################### Install Kubeflow the expensive way #########################################"
-
-
+set -e
 
 cd $HOME
 curl -LO https://storage.googleapis.com/gke-release/asm/istio-1.4.10-asm.18-linux.tar.gz
