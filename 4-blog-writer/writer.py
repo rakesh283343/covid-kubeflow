@@ -83,8 +83,8 @@ for f in fips[1:]:
     tmpDf = df[df['FIPS'] == f]
     if tmpDf.shape[0] < 8:
         continue
-    stateDf =  models['lm'][state]
     state = tmpDf['Province_State'].iloc[0]
+    stateDf =  models['lm'][state]
     city = tmpDf['Admin2'].iloc[0]
     last7daysDf = tmpDf[tmpDf['date'] > (datetime.today() - timedelta(8)).strftime("%Y-%m-%d")]
     fipsStr = str(tmpDf['FIPS'].iloc[0]).zfill(5)

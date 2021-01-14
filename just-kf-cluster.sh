@@ -84,6 +84,8 @@ gcloud projects add-iam-policy-binding "${KF_PROJECT}" --member=user:${EMAIL} --
 
 echo "Cash me here"
 kubectl -n istio-system get ingress
+# remember to add https:// ahead of it or it will keep 404ing even thought its up
+# can take ~20 min
 
 ## turn on autoscaling on both clusters
 
