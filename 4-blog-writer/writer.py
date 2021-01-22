@@ -1,4 +1,4 @@
-
+import os
 
 """
 1. Load Flat File- Load dics of model summaries `d[modelType][state] = pd.DataFrame
@@ -46,7 +46,8 @@ def postFromTemplate(city: str,
 layout: post
 title:  "Update for {city} County, {state} - {todaysDate}"
 date:   {todaysDate} 01:01:29 -0600
-categories: {state}
+categories: [{state}]
+tags: [{city}-{state}]
 ---
 
 # {city} County, {state}
@@ -65,8 +66,10 @@ The population in this census area is {population}. By our calculations:
 
 ## Synopsis
 
+Comming soon...
 {synopsis}
 
+#### Footnotes
 
 [1] Most US CDC offices do give any recovery statistics- we base this on a formula which looks at confirmed new cases
 15 days ago (the average recovery time) and deaths over the last 7 days.
@@ -76,7 +79,13 @@ The population in this census area is {population}. By our calculations:
 [3] Due to reporting delays, this data may be incomplete.
  
     """
-    with open(f'blog_posts/{fname}', 'w') as f:
+    ## make directory
+    try:
+        os.makedirs(f"blog_posts/{state}/{city}")
+    except FileExistsError:
+        # directory already exists
+        pass
+    with open(f'blog_posts/{state}/{city}/{fname}', 'w') as f:
         f.write(s)
 
 for f in fips[1:]:

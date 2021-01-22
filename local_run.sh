@@ -1,7 +1,9 @@
 #!/bin/bash
 
 echo "refreshing covid data"
-cd 1-get-data/COVID-19 & git pull --ff-only
+cd 1-get-data/COVID-19
+git pull --ff-only
+cd ../../
 echo "prepping data for modeling"
 python3 2-etl/prep_data.py
 echo "modeling data"
@@ -10,6 +12,9 @@ echo "writing blog posts"
 python3 4-blog-writer/writer.py
 
 echo "posting blog posts"
-cp blog_posts/* ../covid-blog/_posts
-cd ../covid-blog & git commit -am "new posts" & git push
+cp -r blog_posts/* ../covid-blog/_posts
+cd ../covid-blog
+git add --all
+git commit -am "new posts"
+git push
 #rm blog_posts/*
