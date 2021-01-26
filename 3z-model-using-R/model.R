@@ -1,7 +1,7 @@
 #install.packages(c('lmer4', 'broom'))
 #library(lme4)
 
-data <- read.csv('flat_file.csv')
+data <- read.csv('/data/flat_file.csv')
 data$dateInt <- as.integer(data$date)
 
 for (l in levels(data$Province_State)){
@@ -10,7 +10,7 @@ for (l in levels(data$Province_State)){
   tmp <- tmp[ which(!is.na(tmp$population)),]
   tmp$FIPS_factor <- as.factor(tmp$FIPS)
   model <- lm(newCases ~ FIPS_factor + dateInt + pActive + herdImmune + dateInt*FIPS_factor, data= tmp)
-  write.csv(as.data.frame(summary(model)$coef), paste("model_summaries/lm/",l,".csv"))
+  write.csv(as.data.frame(summary(model)$coef), paste("/data/model_summaries/lm/",l,".csv"))
 }
 
 

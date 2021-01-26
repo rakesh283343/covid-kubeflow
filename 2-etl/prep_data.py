@@ -1,8 +1,9 @@
 from datetime import timedelta, date, datetime
+from os import path
 import pandas as pd
 
-DATA_DIR='1-get-data/COVID-19/csse_covid_19_data/csse_covid_19_daily_reports'
-POPULATION_CSV='1-get-data/co-est2019-alldata.csv'
+DATA_DIR='/data/COVID-19/csse_covid_19_data/csse_covid_19_daily_reports'
+POPULATION_CSV='/data/co-est2019-alldata.csv'
 
 def daterange(start_date, end_date):
     for n in range(int((end_date - start_date).days)):
@@ -14,9 +15,12 @@ end_date = datetime.now().date()
 records = []
 for d in daterange(start_date, end_date):
     day = d.strftime('%m-%d-%Y')
-    df = pd.read_csv(f"{DATA_DIR}/{day}.csv")
-    df['date'] = datetime.strptime(day, "%m-%d-%Y").strftime('%Y-%m-%d')
-    records = records + df.to_dict('records')
+    if path.exists(f"{DATA_DIR}/{day}.csv"):
+        df = pd.read_csv(f"{DATA_DIR}/{day}.csv")
+        df['date'] = datetime.strptime(day, "%m-%d-%Y").strftime('%Y-%m-%d')
+        records = records + df.to_dict('records')
+    else:
+        print(f"{DATA_DIR}/{day}.csv not found...")
 
 
 print(f"Found {len(records)} records.")
@@ -162,7 +166,7 @@ for i in range(len(flat_records)):
         flat_record_redux.append(flat_records[i])
 
 
-pd.DataFrame.from_records(flat_record_redux).to_csv("flat_file.csv")
+pd.DataFrame.from_records(flat_record_redux).to_csv("/data/flat_file.csv")
 
 #
 # flat_records_sm = [records_by_fips[f][d] \

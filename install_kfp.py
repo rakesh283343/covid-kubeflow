@@ -1,7 +1,8 @@
 !pip install --user virtualenv
+!/home/jovyan/.local/bin/virtualenv kfpenv
 !pip install --user ipykernel
 !python -m ipykernel install --user --name=kfpenv
-!/home/jovyan/.local/share/jupyter/kernels/kfpenv/bin/pip install kfp
+!kfpenv/bin/pip install kfp
 # Now reload pace- then go to Kernel, change kerenetl, kfpenv
 
 import kfp

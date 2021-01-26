@@ -16,14 +16,14 @@ import os
 import pandas as pd
 from os import listdir
 
-df = pd.read_csv("flat_file.csv")
+df = pd.read_csv("/data/flat_file.csv")
 
 models = {model : \
               {geo.replace(".csv", "").strip() : \
-                   pd.read_csv(f"model_summaries/{model}/{geo}") \
-               for geo in listdir(f"model_summaries/{model}") \
+                   pd.read_csv(f"/data/model_summaries/{model}/{geo}") \
+               for geo in listdir(f"/data/model_summaries/{model}") \
                } \
-          for model in listdir('model_summaries/') }
+          for model in listdir('/data/model_summaries/') }
 
 fips = df['FIPS'].unique().tolist()
 
@@ -71,7 +71,7 @@ Comming soon...
 
 #### Footnotes
 
-[1] Most US CDC offices do give any recovery statistics- we base this on a formula which looks at confirmed new cases
+[1] Most US CDC offices don't give any recovery statistics- we base this on a formula which looks at confirmed new cases
 15 days ago (the average recovery time) and deaths over the last 7 days.
 
 [2] Herd Immunity is thought to take effect at around ~70-80%
@@ -81,11 +81,11 @@ Comming soon...
     """
     ## make directory
     try:
-        os.makedirs(f"blog_posts/{state}/{city}")
+        os.makedirs(f"/data/blog_posts/{state}/{city}")
     except FileExistsError:
         # directory already exists
         pass
-    with open(f'blog_posts/{state}/{city}/{fname}', 'w') as f:
+    with open(f'/data/blog_posts/{state}/{city}/{fname}', 'w') as f:
         f.write(s)
 
 for f in fips[1:]:
